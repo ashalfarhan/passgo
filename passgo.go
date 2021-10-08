@@ -70,7 +70,7 @@ func main() {
 		length = int(lStr)
 		generate(length)
 	default:
-		fmt.Println("Invalid Argument")
+		fmt.Printf("Invalid flag\n\t Try with --h flag to display help\n")
 	}
 
 }
