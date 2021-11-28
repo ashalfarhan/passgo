@@ -9,6 +9,8 @@ import (
 var (
 	save   bool
 	length int
+	noSymbol bool
+	noNum bool
 )
 
 func init() {
@@ -16,18 +18,19 @@ func init() {
 		fmt.Fprintf(flag.CommandLine.Output(), "Usage of %s\n", "passgo")
 		flag.PrintDefaults()
 	}
-	flag.BoolVar(&save, "save", false, "Whether save to file or not")
 	flag.IntVar(&length, "length", 8, "Generated password length")
+	flag.BoolVar(&save, "save", false, "Whether save to file or not")
+	flag.BoolVar(&noSymbol, "no-symbol", false, "Except symbol")
+	flag.BoolVar(&noNum, "no-number", false, "Except number")
 	flag.Parse()
 }
 
 func main() {
-	pass := Generate(length)
+	pass := Generate(length, noSymbol, noNum)
 	if save {
-		flag.PrintDefaults()
-		fmt.Println("This still beta")
-		os.Exit(1)
+		pass.Save()
+		os.Exit(0)
+		return
 	}
-	PrintGenerated(pass)
-	os.Exit(0)
+	pass.PrintGenerated(false)
 }
