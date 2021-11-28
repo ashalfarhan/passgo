@@ -7,10 +7,10 @@ import (
 )
 
 var (
-	save   bool
-	length int
+	save     bool
+	length   int
 	noSymbol bool
-	noNum bool
+	noNum    bool
 )
 
 func init() {

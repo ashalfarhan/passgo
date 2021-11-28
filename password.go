@@ -47,7 +47,7 @@ func (p *Password) PrintGenerated(s bool) {
 	res := []string{spacer, "Here's your password: 👇", fmt.Sprintf("%v", string(p.value)), spacer}
 	if s {
 		res = append(res[:3], res[2:]...)
-		res[3] = "Saved to: " + p.filename + " as: " + p.passname
+		res[3] = fmt.Sprintf("Saved to: %s as: %s", p.filename, p.passname)
 	}
 	fmt.Print(strings.Join(res, "\n"))
 }
