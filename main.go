@@ -31,28 +31,23 @@ func init() {
 
 func main() {
 	pass, err := password.Generate(length, noSym, noNum)
-	if err != nil {
-		color.Red("%v  Failed to generate password: %v\n", icons.Warning, err.Error())
-		os.Exit(1)
-		return
-	}
+	ErrorExit("Failed to generate password", err)
 
 	err = pass.Copy()
-	if err != nil {
-		color.Red("%v  Failed to write password to the clipboard: %v\n", icons.Warning, err.Error())
-		os.Exit(1)
-		return
-	}
+	ErrorExit("Failed to write password to the clipboard", err)
 
 	if save {
 		err = pass.Save()
-		if err != nil {
-			color.Red("%v  Failed to save your password: %v\n", icons.Warning, err.Error())
-			os.Exit(1)
-			return
-		}
+		ErrorExit("Failed to save your password", err)
 	}
 
 	res := pass.GetResult(save)
 	fmt.Println(res)
+}
+
+func ErrorExit(msg string, err error) {
+	if err != nil {
+		color.HiRed("%v  %s: %v\n", icons.Warning, msg, err.Error())
+		os.Exit(1)
+	}
 }
