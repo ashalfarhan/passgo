@@ -48,13 +48,19 @@ func (p *Password) GetResult(save bool) string {
 	}
 
 	if p.Copied {
-		res = append(res[:3], res[2:]...)
-		res[3] = color.MagentaString("%v Copied to the clipboard", icons.Clip)
+		res = utils.InsertAt(
+			res,
+			len(res)-1,
+			color.MagentaString("%v Copied to the clipboard", icons.Clip),
+		)
 	}
 
 	if save {
-		res = append(res[:4], res[3:]...)
-		res[3] = color.BlueString("%v Saved to: %s as: %s", icons.Paper, p.Filename, p.Passname)
+		res = utils.InsertAt(
+			res,
+			len(res)-1,
+			color.HiBlueString("%v Saved to: %s as: %s", icons.Paper, p.Filename, p.Passname),
+		)
 	}
 
 	return strings.Join(res, "\n")
@@ -102,7 +108,7 @@ func (p *Password) Save() error {
 	}
 
 	p.Filename, p.Passname = filename, passname
-	file, err := os.OpenFile(p.Filename, os.O_APPEND|os.O_CREATE|os.O_RDWR, fs.ModeAppend)
+	file, err := os.OpenFile(p.Filename, os.O_APPEND|os.O_CREATE|os.O_RDWR, fs.ModePerm)
 	if err != nil {
 		return err
 	}
