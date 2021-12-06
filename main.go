@@ -11,10 +11,10 @@ import (
 )
 
 var (
-	save     bool
-	length   int
-	noSym bool
-	noNum    bool
+	save   bool
+	length int
+	noSym  bool
+	noNum  bool
 )
 
 func init() {
@@ -39,7 +39,7 @@ func main() {
 
 	err = pass.Copy()
 	if err != nil {
-		color.Red("%v  Failed to copy your password: %v\n", icons.Warning, err.Error())
+		color.Red("%v  Failed to write password to the clipboard: %v\n", icons.Warning, err.Error())
 		os.Exit(1)
 		return
 	}
@@ -52,7 +52,7 @@ func main() {
 			return
 		}
 	}
-	
+
 	res := pass.GetResult(save)
 	fmt.Println(res)
 }
