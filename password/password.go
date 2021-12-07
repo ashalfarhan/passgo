@@ -71,14 +71,12 @@ func (p *Password) Copy() error {
 
 	if clipboard.Unsupported {
 		color.Yellow(icons.Warning + "Copy to clipboard is not supported")
-		p.Copied = false
-	} else {
-		err = clipboard.WriteAll(string(p.Value))
-		if err != nil {
-			p.Copied = false
-		} else {
-			p.Copied = true
-		}
+		return nil
+	}
+
+	err = clipboard.WriteAll(string(p.Value))
+	if err == nil {
+		p.Copied = true
 	}
 
 	return err
