@@ -47,7 +47,7 @@ func main() {
 
 func ErrorExit(msg string, err error) {
 	if err != nil {
-		color.HiRed("%v  %s: %v\n", icons.Warning, msg, err.Error())
+		fmt.Fprint(os.Stderr, color.HiRedString("%v  %s: %v\n", icons.Warning, msg, err.Error()))
 		os.Exit(1)
 	}
 }
