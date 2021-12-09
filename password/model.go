@@ -5,4 +5,5 @@ type Password struct {
 	Filename string
 	Passname string
 	Copied   bool
+	Saved bool
 }

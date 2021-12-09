@@ -24,9 +24,9 @@ func Generate(length int, ns bool, nn bool) (*Password, error) {
 	if ns && nn {
 		comb = ALPHA
 	} else if nn {
-		comb = ALPHA + SYMBOLS
+		comb = SYMBOLS + ALPHA
 	} else if ns {
-		comb = ALPHA + NUMERIC
+		comb = NUMERIC + ALPHA
 	} else {
 		comb = ALL
 	}
@@ -38,7 +38,7 @@ func Generate(length int, ns bool, nn bool) (*Password, error) {
 	return &Password{Value: result}, nil
 }
 
-func (p *Password) GetResult(save bool) string {
+func (p *Password) GetResult() string {
 	spacer := strings.Repeat("=", 24)
 	res := []string{
 		spacer,
@@ -55,7 +55,7 @@ func (p *Password) GetResult(save bool) string {
 		)
 	}
 
-	if save {
+	if p.Saved {
 		res = utils.InsertAt(
 			res,
 			len(res)-1,
@@ -67,19 +67,18 @@ func (p *Password) GetResult(save bool) string {
 }
 
 func (p *Password) Copy() error {
-	var err error = nil
 
 	if clipboard.Unsupported {
 		color.Yellow(icons.Warning + "Copy to clipboard is not supported")
 		return nil
 	}
 
-	err = clipboard.WriteAll(string(p.Value))
-	if err == nil {
-		p.Copied = true
+	if err := clipboard.WriteAll(string(p.Value)); err != nil {
+		return err
 	}
 
-	return err
+	p.Copied = true
+	return nil
 }
 
 func (p *Password) Save() error {
@@ -88,19 +87,18 @@ func (p *Password) Save() error {
 	if err != nil {
 		return err
 	}
+
 	passname, err := utils.GetInput("Password name: ", sc)
 	if err != nil {
 		return err
 	}
-
 	if filename == "" {
 		filename = "passgo-generated"
 	}
 
 	for passname == "" {
 		color.Yellow("%v  Please enter a password name\n", icons.Warning)
-		passname, err = utils.GetInput("Password name: ", sc)
-		if err != nil {
+		if passname, err = utils.GetInput("Password name: ", sc); err != nil {
 			return err
 		}
 	}
@@ -113,6 +111,10 @@ func (p *Password) Save() error {
 
 	defer file.Close()
 
-	_, err = file.WriteString(fmt.Sprintf("%s=%s\n", p.Passname, string(p.Value)))
-	return err
+	if _, err = file.WriteString(fmt.Sprintf("%s=%s\n", p.Passname, string(p.Value))); err != nil {
+		p.Saved = true
+		return err
+	}
+
+	return nil
 }

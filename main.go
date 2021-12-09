@@ -33,16 +33,13 @@ func main() {
 	pass, err := password.Generate(length, noSym, noNum)
 	ErrorExit("Failed to generate password", err)
 
-	err = pass.Copy()
-	ErrorExit("Failed to write password to the clipboard", err)
+	ErrorExit("Failed to write password to the clipboard", pass.Copy())
 
 	if save {
-		err = pass.Save()
-		ErrorExit("Failed to save your password", err)
+		ErrorExit("Failed to save your password", pass.Save())
 	}
 
-	res := pass.GetResult(save)
-	fmt.Println(res)
+	fmt.Println(pass.GetResult())
 }
 
 func ErrorExit(msg string, err error) {
