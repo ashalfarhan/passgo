@@ -112,9 +112,9 @@ func (p *Password) Save() error {
 	defer file.Close()
 
 	if _, err = file.WriteString(fmt.Sprintf("%s=%s\n", p.Passname, string(p.Value))); err != nil {
-		p.Saved = true
 		return err
 	}
-
+	
+	p.Saved = true
 	return nil
 }
