@@ -30,16 +30,18 @@ func Generate(length int, ns bool, nn bool) (*Password, error) {
 	} else {
 		comb = ALL
 	}
-	rand.Seed(time.Now().UTC().UnixNano())
+	
 	result := make([]byte, length)
+	rand.Seed(time.Now().UTC().UnixNano())
 	for i := 0; i < length; i++ {
 		result[i] = comb[rand.Intn(len(comb))]
 	}
+
 	return &Password{Value: result}, nil
 }
 
 func (p *Password) GetResult() string {
-	spacer := strings.Repeat("=", 24)
+	spacer := strings.Repeat("=", 28)
 	res := []string{
 		spacer,
 		color.GreenString("%v Here's your password:", icons.Donut),
