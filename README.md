@@ -1,3 +1,3 @@
 # Passgo
 
-Just a random password generator
+> My exercise how to use Go Languange
