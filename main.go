@@ -23,28 +23,32 @@ func init() {
 		flag.PrintDefaults()
 	}
 	flag.IntVar(&length, "length", 8, "Generated password length")
-	flag.BoolVar(&save, "save", false, "Whether save to file or not")
-	flag.BoolVar(&noSym, "no-symbol", false, "Except symbol")
-	flag.BoolVar(&noNum, "no-number", false, "Except number")
+	flag.BoolVar(&save, "save", false, "Whether save to a file or not")
+	flag.BoolVar(&noSym, "no-symbols", false, "Exclude symbols")
+	flag.BoolVar(&noNum, "no-numbers", false, "Exclude numbers")
 	flag.Parse()
 }
 
 func main() {
 	pass, err := password.Generate(length, noSym, noNum)
-	ErrorExit("Failed to generate password", err)
+	if err != nil {
+		PrintErr("Failed to generate password", err)
+		return
+	}
 
-	ErrorExit("Failed to write password to the clipboard", pass.Copy())
+	if err = pass.Copy(); err != nil {
+		PrintErr("Failed to write password to the clipboard", err)
+	}
 
 	if save {
-		ErrorExit("Failed to save your password", pass.Save())
+		if err = pass.Save(); err != nil {
+			PrintErr("Failed to save your password", err)
+		}
 	}
 
 	fmt.Println(pass.GetResult())
 }
 
-func ErrorExit(msg string, err error) {
-	if err != nil {
-		fmt.Fprint(os.Stderr, color.HiRedString("%v  %s: %v\n", icons.Warning, msg, err.Error()))
-		os.Exit(1)
-	}
+func PrintErr(msg string, err error) {
+	fmt.Fprint(os.Stderr, color.HiRedString("%v  %s: %v\n", icons.Warning, msg, err.Error()))
 }
